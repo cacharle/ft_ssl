@@ -6,7 +6,7 @@
 #    By: cacharle <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/03 20:14:50 by cacharle          #+#    #+#              #
-#    Updated: 2020/02/22 10:44:15 by cacharle         ###   ########.fr        #
+#    Updated: 2020/02/22 11:24:58 by cacharle         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,6 +31,9 @@ OBJ = $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 NAME = ft_ssl
 
 all: prebuild libft_all $(NAME)
+
+test: all
+	./test.sh
 
 prebuild:
 	@for subdir in $(OBJ_SUBDIR); do mkdir -p $$subdir; done
