@@ -1,34 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_ssl.h                                           :+:      :+:    :+:   */
+/*   ft_ssl_sha256.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/02/03 20:27:19 by cacharle          #+#    #+#             */
-/*   Updated: 2020/02/22 07:20:34 by cacharle         ###   ########.fr       */
+/*   Created: 2020/02/22 07:18:42 by cacharle          #+#    #+#             */
+/*   Updated: 2020/02/22 07:18:57 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_SSL_H
-# define FT_SSL_H
-
-# include "libft.h"
-
-# include "ft_ssl_md5.h"
-# include "ft_ssl_sha256.h"
-
-typedef int	(*t_func_main)(int argc, char **argv);
-typedef struct
-{
-	char		*name;
-	t_func_main	entry;
-}				t_command;
+#ifndef FT_SSL_SHA256_H
+# define FT_SSL_SHA256_H
 
 /*
-** error.c
+** main_sha256.c
 */
 
-void	fl_error_command(char *command);
+int		main_sha256(int argc, char **argv);
 
 #endif

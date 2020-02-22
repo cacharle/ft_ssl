@@ -1,34 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_ssl.h                                           :+:      :+:    :+:   */
+/*   main_md5.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/02/03 20:27:19 by cacharle          #+#    #+#             */
-/*   Updated: 2020/02/22 07:20:34 by cacharle         ###   ########.fr       */
+/*   Created: 2020/02/22 07:20:07 by cacharle          #+#    #+#             */
+/*   Updated: 2020/02/22 07:20:15 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_SSL_H
-# define FT_SSL_H
+#include "ft_ssl_md5.h"
 
-# include "libft.h"
-
-# include "ft_ssl_md5.h"
-# include "ft_ssl_sha256.h"
-
-typedef int	(*t_func_main)(int argc, char **argv);
-typedef struct
+int	main_md5(int argc, char **argv)
 {
-	char		*name;
-	t_func_main	entry;
-}				t_command;
-
-/*
-** error.c
-*/
-
-void	fl_error_command(char *command);
-
-#endif
+	return (0);
+}

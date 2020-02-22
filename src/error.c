@@ -1,34 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_ssl.h                                           :+:      :+:    :+:   */
+/*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/02/03 20:27:19 by cacharle          #+#    #+#             */
-/*   Updated: 2020/02/22 07:20:34 by cacharle         ###   ########.fr       */
+/*   Created: 2020/02/22 07:02:59 by cacharle          #+#    #+#             */
+/*   Updated: 2020/02/22 07:13:57 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_SSL_H
-# define FT_SSL_H
+#include "ft_ssl.h"
 
-# include "libft.h"
-
-# include "ft_ssl_md5.h"
-# include "ft_ssl_sha256.h"
-
-typedef int	(*t_func_main)(int argc, char **argv);
-typedef struct
+void	fl_error_command(char *command)
 {
-	char		*name;
-	t_func_main	entry;
-}				t_command;
-
-/*
-** error.c
-*/
-
-void	fl_error_command(char *command);
-
-#endif
+	ft_putstr_fd("ft_ssl: Error: '", STDERR_FILENO);
+	ft_putstr_fd(command, STDERR_FILENO);
+	ft_putendl_fd("' is an invalid command.", STDERR_FILENO);
+	ft_putstr_fd("\nStandard commands:\n"
+		"\nMessage Digest commands:\n"
+		"md5\n"
+		"sha256\n"
+		"\nCipher commands:\n",
+		STDERR_FILENO
+	);
+}
