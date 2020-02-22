@@ -6,13 +6,13 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/22 07:19:18 by cacharle          #+#    #+#             */
-/*   Updated: 2020/02/22 07:19:47 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/02/22 08:57:22 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl_sha256.h"
 
-int	main_sha256(int argc, char **argv)
+int	fl_main_sha256(int argc, char **argv)
 {
 	return (0);
 }

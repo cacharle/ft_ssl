@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/22 07:18:42 by cacharle          #+#    #+#             */
-/*   Updated: 2020/02/22 07:18:57 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/02/22 08:57:14 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,6 @@
 ** main_sha256.c
 */
 
-int		main_sha256(int argc, char **argv);
+int		fl_main_sha256(int argc, char **argv);
 
 #endif

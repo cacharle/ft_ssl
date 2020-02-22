@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/22 07:14:45 by cacharle          #+#    #+#             */
-/*   Updated: 2020/02/22 07:18:24 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/02/22 08:57:06 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,6 @@
 ** main_md5.c
 */
 
-int		main_md5(int argc, char **argv);
+int		fl_main_md5(int argc, char **argv);
 
 #endif

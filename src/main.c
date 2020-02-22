@@ -6,15 +6,15 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/03 20:29:33 by cacharle          #+#    #+#             */
-/*   Updated: 2020/02/22 07:22:09 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/02/22 08:57:39 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
 
 static t_command	g_commands[] = {
-	{"md5", main_md5},
-	{"sha256", main_sha256}
+	{"md5", fl_main_md5},
+	{"sha256", fl_main_sha256}
 };
 
 int	fl_dispatch_command(char *command, int argc, char **argv)

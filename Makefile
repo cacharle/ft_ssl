@@ -6,7 +6,7 @@
 #    By: cacharle <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/03 20:14:50 by cacharle          #+#    #+#              #
-#    Updated: 2020/02/22 07:27:54 by cacharle         ###   ########.fr        #
+#    Updated: 2020/02/22 10:44:15 by cacharle         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,7 +33,7 @@ NAME = ft_ssl
 all: prebuild libft_all $(NAME)
 
 prebuild:
-	for subdir in $(OBJ_SUBDIR); do mkdir -p $$subdir; done
+	@for subdir in $(OBJ_SUBDIR); do mkdir -p $$subdir; done
 
 $(NAME): $(OBJ)
 	@echo "Linking: $@"
