@@ -1,18 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main_md5.c                                         :+:      :+:    :+:   */
+/*   ft_ssl_md5.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/02/22 07:20:07 by cacharle          #+#    #+#             */
-/*   Updated: 2020/02/22 08:57:32 by cacharle         ###   ########.fr       */
+/*   Created: 2020/02/22 07:14:45 by cacharle          #+#    #+#             */
+/*   Updated: 2020/07/27 16:36:41 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+#include <stdio.h>
 
-#include "ft_ssl_md5.h"
+#ifndef FT_SSL_MD5_H
+# define FT_SSL_MD5_H
 
-int	fl_main_md5(int argc, char **argv)
-{
-	return (0);
-}
+# include <stdlib.h>
+# include <stdint.h>
+# include <stddef.h>
+
+# include "libft.h"
+
+char	*message_digest_md5(uint8_t *msg, size_t size);
+
+#endif

@@ -6,7 +6,7 @@
 #    By: cacharle <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/03 20:14:50 by cacharle          #+#    #+#              #
-#    Updated: 2020/02/22 11:24:58 by cacharle         ###   ########.fr        #
+#    Updated: 2020/07/27 15:01:57 by charles          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ RM = rm -f
 MAKE = make
 
 LIBFT_DIR = libft
-INCLUDE_DIR = include
+INCLUDE_DIR = inc
 SRC_DIR = src
 OBJ_DIR = obj
 
