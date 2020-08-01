@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/03 20:29:33 by cacharle          #+#    #+#             */
-/*   Updated: 2020/07/27 16:27:16 by charles          ###   ########.fr       */
+/*   Updated: 2020/08/01 19:11:50 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@
 
 int main(int argc, char **argv)
 {
+
 	/* if (argc == 1) */
 	/* { */
 	/* 	ft_putstr("usage: "); */
@@ -43,6 +44,21 @@ int main(int argc, char **argv)
 	/* } */
 	/* return (dispatch_command(argv[1], argc - 2, argv + 2)); */
 	(void)argc;
+	t_message_digest_param param;
+	param.compression_func = md5_compression_func;
+	param.compression_state = malloc(4 * sizeof(uint32_t));
+	param.compression_state_size = 4 * sizeof(uint32_t);
+	param.chunk_size = 64;
+	param.message = argv[1];
+	param.size = ft_strlen(argv[1]);
 
-	printf("%s\n", message_digest_md5((uint8_t*)argv[1], ft_strlen(argv[1])));
+	((uint32_t*)param.compression_state)[0] = MD5_A_INIT;
+	((uint32_t*)param.compression_state)[1] = MD5_B_INIT;
+	((uint32_t*)param.compression_state)[2] = MD5_C_INIT;
+	((uint32_t*)param.compression_state)[3] = MD5_D_INIT;
+
+	printf("%s\n", message_digest(&param));
+
+	/* printf("%s\n", message_digest_md5((uint8_t*)argv[1], ft_strlen(argv[1]))); */
+	return 0;
 }

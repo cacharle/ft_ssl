@@ -6,20 +6,34 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/22 07:20:07 by cacharle          #+#    #+#             */
-/*   Updated: 2020/08/01 13:50:41 by charles          ###   ########.fr       */
+/*   Updated: 2020/08/01 19:27:06 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_ssl_md5.h"
+#include "ft_ssl.h"
 
-const int	g_shifts[64] = {
+/*
+** | bits | bytes |
+** |------|-------|
+** | 8    | 1     |
+** | 16   | 2     |
+** | 32   | 4     |
+** | 64   | 8     |
+** | 128  | 16    |
+** | 256  | 32    |
+** | 512  | 64    |
+**
+** | 448  | 56    |
+*/
+
+static const int	g_shifts_table[64] = {
 	7, 12, 17, 22,  7, 12, 17, 22,  7, 12, 17, 22,  7, 12, 17, 22,   //  0..15
 	5,  9, 14, 20,  5,  9, 14, 20,  5,  9, 14, 20,  5,  9, 14, 20,   // 16..31
 	4, 11, 16, 23,  4, 11, 16, 23,  4, 11, 16, 23,  4, 11, 16, 23,   // 32..47
 	6, 10, 15, 21,  6, 10, 15, 21,  6, 10, 15, 21,  6, 10, 15, 21,   // 48..63
 };
 
-const uint32_t	g_K[64] = {
+static const uint32_t	g_sin_table[64] = {
 	0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee,  //  0.. 3
 	0xf57c0faf, 0x4787c62a, 0xa8304613, 0xfd469501,  //  4.. 7
 	0x698098d8, 0x8b44f7af, 0xffff5bb1, 0x895cd7be,  //  8..11
@@ -38,163 +52,55 @@ const uint32_t	g_K[64] = {
 	0xf7537e82, 0xbd3af235, 0x2ad7d2bb, 0xeb86d391,  // 60..63
 };
 
-#define A_INIT 0x67452301
-#define B_INIT 0xefcdab89
-#define C_INIT 0x98badcfe
-#define D_INIT 0x10325476
 
-uint32_t	leftrotate(uint32_t x, int s)
+void *md5_compression_func(void *v_state, uint8_t *chunk)
 {
-	return (x << s) | (x >> (32 - s));
-}
-
-/*
-** | bits | bytes |
-** |------|-------|
-** | 8    | 1     |
-** | 16   | 2     |
-** | 32   | 4     |
-** | 64   | 8     |
-** | 128  | 16    |
-** | 256  | 32    |
-** | 512  | 64    |
-**
-** | 448  | 56    |
-*/
-
-char	*message_digest_md5(uint8_t *msg, uint64_t size)
-{
-	// padding on 512 bit (64 bytes)
-	// format:
-	// 1 bit
-	// fill with zero start -> (end - 64 bit)
-	// 64 bit repr of the original len modulo 2^64 (ULONG_MAX)
-
-
-	// at least 1 byte for 1 bit + 8 bytes for 64bit size
-	uint64_t	pad_size = (64 - (size + 8) % 64) + 8;
-
-	/* printf("%lu\n", size % 64); */
-	/* printf("%lu\n", 64 - size % 64); */
-	printf("%lu + %lu = %lu byte\n", size, pad_size, size + pad_size);
-
-	uint8_t	*tmp;
-	tmp = msg;
-	msg = malloc(size + pad_size); // add ft_memdup
-
-	ft_memcpy(msg, tmp, size);
-	ft_memset(msg + size, 0x0, pad_size);                           // fill end with 0
-
-	msg[size] |= 1 << 7;                                            // add 1 bit at padding start
-
-	*((uint64_t*)(msg + size + pad_size - sizeof(uint64_t))) = (uint64_t)size * 8; // add
-	size += pad_size;
-
-	for (uint64_t i = 0; i < size; i++)
-	{
-		if (i % 8 == 0)
-			printf("\n");
-		printf("%02x ", msg[i]);
-	}
-	printf("\n\n");
-	/* printf("\n%lu: %s\n", size, msg); */
-	/* printf("|%lu|\n", *((uint64_t*)(msg + size - 8))); */
-
-	// state initialized to predefined constants
-
-	// block of 512 bit
-	// 128 bit state (a, b, c, d)
-	// 4 rounds on each block (128 * 4 = 512)
-
-
-	uint32_t	f;
-	int	g;
+	int g;
 	int	i;
 
+	uint32_t	a, b, c, d, f;
+	uint32_t	*state;
 
-	size_t chunk_i;
+	state = v_state;
+	a = state[0];
+	b = state[1];
+	c = state[2];
+	d = state[3];
 
-	uint32_t	a, b, c, d;
-
-	uint32_t a0 = A_INIT;
-	uint32_t b0 = B_INIT;
-	uint32_t c0 = C_INIT;
-	uint32_t d0 = D_INIT;
-
-	chunk_i = 0;
-	while (chunk_i < size)
+	i = -1;
+	while (++i < 64)
 	{
-		a = a0;
-		b = b0;
-		c = c0;
-		d = d0;
 
-		i = -1;
-		while (++i < 64)
+		if (i < 16)
 		{
-
-			if (i < 16)
-			{
-				f = (b & c) | ((~b) & d);
-				g = i;
-			}
-			else if (i < 32)
-			{
-				f = (b & d) | (c & (~d));
-				g = (5 * i + 1) % 16;
-			}
-			else if (i < 48)
-			{
-				f = b ^ c ^ d;
-				g = (3 * i + 5) % 16;
-			}
-			else
-			{
-				f = c ^ (b | ~d);
-				g = (7 * i) % 16;
-			}
-
-			f += a + g_K[i] + ((uint32_t*)(msg + chunk_i))[g];
-			a = d;
-			d = c;
-			c = b;
-			b += leftrotate(f, g_shifts[i]);
+			f = (b & c) | ((~b) & d);
+			g = i;
 		}
-		a0 += a;
-		b0 += b;
-		c0 += c;
-		d0 += d;
+		else if (i < 32)
+		{
+			f = (b & d) | (c & (~d));
+			g = (5 * i + 1) % 16;
+		}
+		else if (i < 48)
+		{
+			f = b ^ c ^ d;
+			g = (3 * i + 5) % 16;
+		}
+		else
+		{
+			f = c ^ (b | ~d);
+			g = (7 * i) % 16;
+		}
 
-		chunk_i += 64;
+		f += a + g_sin_table[i] + ((uint32_t*)chunk)[g];
+		a = d;
+		d = c;
+		c = b;
+		b += rotate_left(f, g_shifts_table[i]);
 	}
-
-	uint8_t buf[16];
-	buf[0] = (a0 & 0xff000000) >> 24;
-	buf[1] = (a0 & 0x00ff0000) >> 16;
-	buf[2] = (a0 & 0x0000ff00) >> 8;
-	buf[3] = a0 & 0x000000ff;
-
-	buf[4] = (b0 & 0xff000000) >> 24;
-	buf[5] = (b0 & 0x00ff0000) >> 16;
-	buf[6] = (b0 & 0x0000ff00) >> 8;
-	buf[7] = b0 & 0x000000ff;
-
-	buf[8] = (c0 & 0xff000000) >> 24;
-	buf[9] = (c0 & 0x00ff0000) >> 16;
-	buf[10] = (c0 & 0x0000ff00) >> 8;
-	buf[11] = c0 & 0x000000ff;
-
-	buf[12] = (d0 & 0xff000000) >> 24;
-	buf[13] = (d0 & 0x00ff0000) >> 16;
-	buf[14] = (d0 & 0x0000ff00) >> 8;
-	buf[15] = d0 & 0x000000ff;
-
-
-	char *ret = malloc(33 * sizeof(char));
-	ret[32] = '\0';
-
-	sprintf(ret, "%08x%08x%08x%08x", ((uint32_t*)buf)[0], ((uint32_t*)buf)[1],
-			((uint32_t*)buf)[2], ((uint32_t*)buf)[3]);
-
-	return (ret);
+	state[0] += a;
+	state[1] += b;
+	state[2] += c;
+	state[3] += d;
+	return (state);
 }
