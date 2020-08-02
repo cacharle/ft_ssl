@@ -6,13 +6,13 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/03 20:29:33 by cacharle          #+#    #+#             */
-/*   Updated: 2020/08/02 11:26:50 by charles          ###   ########.fr       */
+/*   Updated: 2020/08/02 14:17:53 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
 
-static uint32_t	g_md5_state[4] = {MD5_A_INIT, MD5_B_INIT, MD5_C_INIT, MD5_D_INIT};
+static const uint32_t	g_md5_state[4] = {MD5_A_INIT, MD5_B_INIT, MD5_C_INIT, MD5_D_INIT};
 
 /* static uint32_t	g_sha1_state[5] = {0}; */
 
@@ -28,7 +28,7 @@ t_message_digest_param	*dispatch_command(char *command)
 	i = 0;
 	while (i < sizeof(g_compression_table) / sizeof(t_compression_entry))
 	{
-		if (ft_strcmp(g_compression_table[i].name, command) == 0)
+		if (ft_strcasecmp(g_compression_table[i].name, command) == 0)
 			return (&g_compression_table[i].param);
 		i++;
 	}
@@ -48,8 +48,5 @@ int main(int argc, char **argv)
 	t_message_digest_param *md_param = dispatch_command(argv[1]);
 	if (md_param == NULL)
 		return 1;
-	return (parse_args(argc - 2, argv + 2, argv[1], md_param));
-
-	/* printf("%s\n", message_digest(md_param, (uint8_t*)argv[2], ft_strlen(argv[2]))); */
-	/* return 0; */
+	return (parse_args(argc - 2, argv + 2, ft_strtoupper(argv[1]), md_param));
 }

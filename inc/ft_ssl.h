@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/03 20:27:19 by cacharle          #+#    #+#             */
-/*   Updated: 2020/08/02 11:59:54 by charles          ###   ########.fr       */
+/*   Updated: 2020/08/02 14:04:47 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <stdio.h>
@@ -15,6 +15,7 @@
 # define FT_SSL_H
 
 # include <stdint.h>
+# include <string.h>
 
 # include "libft.h"
 
@@ -23,7 +24,7 @@ typedef void *(*t_compression_func)(void *state, uint8_t *chunk);
 typedef struct
 {
 	t_compression_func	compression_func;
-	void				*compression_state;
+	const void			*compression_state_init;
 	size_t				compression_state_size;
 	size_t				chunk_size;
 }						t_message_digest_param;

@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/22 09:43:42 by cacharle          #+#    #+#             */
-/*   Updated: 2020/08/02 11:58:47 by charles          ###   ########.fr       */
+/*   Updated: 2020/08/02 14:17:15 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static void	st_print_digest(t_flags flags, char *command, char *input, char *dig
 	if (!(flags & FLAG_REVERSE) && !(flags & FLAG_QUIET))
 	{
 		ft_putstr(command); //toupper
-		ft_putchar('(');
+		ft_putstr(" (");
 		st_print_digest_input(flags, input);
 		ft_putstr(") = ");
 	}
@@ -62,11 +62,12 @@ int		parse_args(int argc, char **argv, char *command, t_message_digest_param *md
 		{
 			i++;
 			if (i >= argc) // no string
-				return 1;
+				return (1);
 			digest_str = message_digest(md_param, (uint8_t*)argv[i], ft_strlen(argv[i]));
 			if (digest_str == NULL)
-				return 1;
+				return (1);
 			st_print_digest(flags | FLAG_STRING, command, argv[i], digest_str);
+			free(digest_str);
 		}
 		else if (ft_strcmp(argv[i], "-p") == 0)
 		{
@@ -74,7 +75,7 @@ int		parse_args(int argc, char **argv, char *command, t_message_digest_param *md
 				return (1);
 			digest_str = message_digest(md_param, file.data, file.size);
 			if (digest_str == NULL)
-				return 1;
+				return (1);
 			write(STDOUT_FILENO, file.data, file.size);
 			ft_putendl(digest_str);
 		}
@@ -83,17 +84,31 @@ int		parse_args(int argc, char **argv, char *command, t_message_digest_param *md
 		else if (ft_strcmp(argv[i], "-r") == 0)
 			flags |= FLAG_REVERSE;
 		else
+		{
+			ft_putstr_fd("ft_ssl: invalid option -- '", STDERR_FILENO);
+			ft_putstr_fd(argv[i] + 1, STDERR_FILENO);
+			ft_putstr_fd("'\n", STDERR_FILENO);
 			return (1);
+		}
 		i++;
 	}
 	while (i < argc)
 	{
 		if (ft_getfile(argv[i], &file) < 0)
-			return (1);
+		{
+			ft_putstr_fd("ft_ssl: ", STDERR_FILENO);
+			ft_putstr_fd(argv[i], STDERR_FILENO);
+			ft_putstr_fd(": ", STDERR_FILENO);
+			ft_putstr_fd(strerror(errno), STDERR_FILENO);
+			ft_putstr_fd("\n", STDERR_FILENO);
+			i++;
+			continue ;
+		}
 		digest_str = message_digest(md_param, file.data, file.size);
 		if (digest_str == NULL)
 			return 1;
 		st_print_digest(flags, command, argv[i], digest_str);
+		free(digest_str);
 		free(file.data);
 		i++;
 	}
