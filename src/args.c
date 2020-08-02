@@ -6,86 +6,96 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/22 09:43:42 by cacharle          #+#    #+#             */
-/*   Updated: 2020/07/27 14:57:39 by charles          ###   ########.fr       */
+/*   Updated: 2020/08/02 11:58:47 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
 
-/* static void	st_print_digest_id(t_flags flags, char *id) */
-/* { */
-/* 	if (flags & FLAG_STRING) */
-/* 		ft_putchar('"'); */
-/* 	ft_putstr(id); */
-/* 	if (flags & FLAG_STRING) */
-/* 		ft_putchar('"'); */
-/* } */
-/*  */
-/* static void	st_print_digest(t_digest *digest, t_flags flags, char *name, char *id) */
-/* { */
-/* 	int	i; */
-/*  */
-/* 	if (!(flags & FLAG_REVERSE) && !(flags & FLAG_QUIET)) */
-/* 	{ */
-/* 		ft_putstr(name); */
-/* 		ft_putchar('('); */
-/* 		st_print_digest_id(flags, id); */
-/* 		ft_putstr(") = "); */
-/* 	} */
-/* 	i = -1; */
-/* 	while (++i < digest->size) */
-/* 		ft_putnbr_base(digest->data[i], "0123456789abcdef"); */
-/* 	if (flags & FLAG_QUIET) */
-/* 		return ; */
-/* 	ft_putchar(' '); */
-/* 	st_print_digest_id(flags, id); */
-/* } */
-/*  */
-/* int		parse_args(char *name, int argc, char **argv, t_func_hash func_hash) */
-/* { */
-/* 	t_flags		flags; */
-/* 	t_digest	digest; */
-/* 	char		*file; */
-/*  */
-/* 	flags = 0; */
-/* 	while (**argv == '-') */
-/* 	{ */
-/* 		(*argv)++; */
-/* 		if (**argv == 's') */
-/* 		{ */
-/* 			if ((*argv)[1] == '\0') */
-/* 			{ */
-/* 				func_hash(*(++argv), &digest); */
-/* 				argc--; */
-/* 			} */
-/* 			else */
-/* 				func_hash(ft_strdup(*argv + 1), &digest); */
-/* 			st_print_digest(&digest, flags, name, ""); */
-/* 		} */
-/* 		else if (**argv == 'p') */
-/* 			flags |= FLAG_PIPE; */
-/* 		else if (**argv == 'q') */
-/* 			flags |= FLAG_QUIET; */
-/* 		else if (**argv == 'r') */
-/* 			flags |= FLAG_REVERSE; */
-/* 		else */
-/* 			return (1); */
-/* 		if (ft_strchr("pqrs", (*argv)[1]) != NULL) */
-/* 		{ */
-/* 			**argv = '-'; */
-/* 			continue; */
-/* 		} */
-/* 		argv++; */
-/* 		argc--; */
-/* 	} */
-/* 	while (argc-- > 0) */
-/* 	{ */
-/* 		if ((file = ft_read_file(*argv)) == NULL) */
-/* 			return (1); */
-/* 		func_hash(file, &digest); */
-/* 		free(file); */
-/* 		st_print_digest(&digest, flags, name, *argv); */
-/* 		argv++; */
-/* 	} */
-/* 	return (0); */
-/* } */
+static void	st_print_digest_input(t_flags flags, char *input)
+{
+	if (flags & FLAG_STRING)
+		ft_putchar('"');
+	ft_putstr(input);
+	if (flags & FLAG_STRING)
+		ft_putchar('"');
+}
+
+static void	st_print_digest(t_flags flags, char *command, char *input, char *digest_str)
+{
+	if (!(flags & FLAG_REVERSE) && !(flags & FLAG_QUIET))
+	{
+		ft_putstr(command); //toupper
+		ft_putchar('(');
+		st_print_digest_input(flags, input);
+		ft_putstr(") = ");
+	}
+	ft_putstr(digest_str);
+	if (flags & FLAG_QUIET)
+	{
+		ft_putchar('\n');
+		return ;
+	}
+	if (flags & FLAG_REVERSE)
+	{
+		ft_putchar(' ');
+		st_print_digest_input(flags, input);
+	}
+	ft_putchar('\n');
+}
+
+int		parse_args(int argc, char **argv, char *command, t_message_digest_param *md_param)
+{
+	t_flags		flags;
+	t_ftmem		file;
+
+	char *digest_str;
+	int i;
+
+	flags = 0;
+	i = 0;
+	while (i < argc)
+	{
+		if (argv[i][0] != '-')
+			break ;
+		if (ft_strcmp(argv[i], "-s") == 0)
+		{
+			i++;
+			if (i >= argc) // no string
+				return 1;
+			digest_str = message_digest(md_param, (uint8_t*)argv[i], ft_strlen(argv[i]));
+			if (digest_str == NULL)
+				return 1;
+			st_print_digest(flags | FLAG_STRING, command, argv[i], digest_str);
+		}
+		else if (ft_strcmp(argv[i], "-p") == 0)
+		{
+			if (ft_getfile_fd(STDIN_FILENO, &file) < 0)
+				return (1);
+			digest_str = message_digest(md_param, file.data, file.size);
+			if (digest_str == NULL)
+				return 1;
+			write(STDOUT_FILENO, file.data, file.size);
+			ft_putendl(digest_str);
+		}
+		else if (ft_strcmp(argv[i], "-q") == 0)
+			flags |= FLAG_QUIET;
+		else if (ft_strcmp(argv[i], "-r") == 0)
+			flags |= FLAG_REVERSE;
+		else
+			return (1);
+		i++;
+	}
+	while (i < argc)
+	{
+		if (ft_getfile(argv[i], &file) < 0)
+			return (1);
+		digest_str = message_digest(md_param, file.data, file.size);
+		if (digest_str == NULL)
+			return 1;
+		st_print_digest(flags, command, argv[i], digest_str);
+		free(file.data);
+		i++;
+	}
+	return (0);
+}
