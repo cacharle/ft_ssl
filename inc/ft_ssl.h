@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/03 20:27:19 by cacharle          #+#    #+#             */
-/*   Updated: 2020/08/02 14:04:47 by charles          ###   ########.fr       */
+/*   Updated: 2020/08/02 16:37:45 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <stdio.h>
@@ -30,6 +30,8 @@ typedef struct
 }						t_message_digest_param;
 
 void	*md5_compression_func(void *v_state, uint8_t *chunk);
+void	*sha1_compression_func(void *v_state, uint8_t *chunk);
+void	*sha256_compression_func(void *v_state, uint8_t *chunk);
 
 char	*message_digest(t_message_digest_param *param, uint8_t *message_origin, uint64_t size);
 

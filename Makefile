@@ -6,7 +6,7 @@
 #    By: cacharle <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/03 20:14:50 by cacharle          #+#    #+#              #
-#    Updated: 2020/07/27 15:01:57 by charles          ###   ########.fr        #
+#    Updated: 2020/08/02 15:51:02 by charles          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,7 @@ OBJ_DIR = obj
 OBJ_SUBDIR = $(shell find $(SRC_DIR) -type d | sed 's/src/obj/')
 
 CC = gcc
-CCFLAGS = -I$(LIBFT_DIR)/include -I$(INCLUDE_DIR) -Wall -Wextra #-Werror
+CCFLAGS = -I$(LIBFT_DIR)/include -I$(INCLUDE_DIR) -Wall -Wextra -Wpedantic #-Werror
 LDFLAGS = -L$(LIBFT_DIR) -lft
 
 INCLUDE = $(shell find $(INCLUDE_DIR) -type f -name "*.h")

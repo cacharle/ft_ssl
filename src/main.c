@@ -6,19 +6,42 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/03 20:29:33 by cacharle          #+#    #+#             */
-/*   Updated: 2020/08/02 14:17:53 by charles          ###   ########.fr       */
+/*   Updated: 2020/08/02 16:47:01 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
 
-static const uint32_t	g_md5_state[4] = {MD5_A_INIT, MD5_B_INIT, MD5_C_INIT, MD5_D_INIT};
+static const uint32_t	g_md5_state[4] = {
+	0x67452301,
+	0xefcdab89,
+	0x98badcfe,
+	0x10325476,
+};
 
-/* static uint32_t	g_sha1_state[5] = {0}; */
+static const uint32_t	g_sha1_state[5] = {
+	0x67452301,
+	0xefcdab89,
+	0x98badcfe,
+	0x10325476,
+	0xc3d2e1f0,
+};
+
+static const uint32_t	g_sha256_state[8] = {
+	0x6a09e667,
+	0xbb67ae85,
+	0x3c6ef372,
+	0xa54ff53a,
+	0x510e527f,
+	0x9b05688c,
+	0x1f83d9ab,
+	0x5be0cd19,
+};
 
 t_compression_entry	g_compression_table[] = {
 	{"md5", {md5_compression_func, g_md5_state, sizeof(g_md5_state), 64}},
-	/* {"sha1", {sha1_compression_func, g_sha1_state, sizeof(g_sha1_state), 64}} */
+	{"sha1", {sha1_compression_func, g_sha1_state, sizeof(g_sha1_state), 64}},
+	{"sha256", {sha256_compression_func, g_sha256_state, sizeof(g_sha256_state), 64}},
 };
 
 t_message_digest_param	*dispatch_command(char *command)
