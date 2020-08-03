@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/03 20:27:19 by cacharle          #+#    #+#             */
-/*   Updated: 2020/08/02 16:37:45 by charles          ###   ########.fr       */
+/*   Updated: 2020/08/03 12:46:26 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <stdio.h>
@@ -16,6 +16,11 @@
 
 # include <stdint.h>
 # include <string.h>
+# include <endian.h>
+
+# if __BYTE_ORDER == __BIG_ENDIAN
+#  error "This implementation doesn't support big endian"
+# endif
 
 # include "libft.h"
 
@@ -26,7 +31,9 @@ typedef struct
 	t_compression_func	compression_func;
 	const void			*compression_state_init;
 	size_t				compression_state_size;
+	size_t				compression_state_stride;
 	size_t				chunk_size;
+	bool				big_endian;
 }						t_message_digest_param;
 
 void	*md5_compression_func(void *v_state, uint8_t *chunk);
@@ -74,6 +81,8 @@ int			parse_args(int argc, char **argv, char *command, t_message_digest_param *m
 uint32_t	rotate_left(uint32_t x, int s);
 uint32_t	rotate_right(uint32_t x, int s);
 char		*bytes_to_str(uint8_t *bytes, size_t size);
+uint32_t	reverse_bytes32(uint32_t x);
+uint64_t	reverse_bytes64(uint64_t x);
 
 /*
 ** md5

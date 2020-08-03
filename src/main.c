@@ -6,11 +6,16 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/03 20:29:33 by cacharle          #+#    #+#             */
-/*   Updated: 2020/08/02 16:47:01 by charles          ###   ########.fr       */
+/*   Updated: 2020/08/03 12:39:25 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
+
+
+/* #if __BYTE_ORDER == __BIG_ENDIAN */
+/* #warn "bonjour" */
+/* #endif */
 
 static const uint32_t	g_md5_state[4] = {
 	0x67452301,
@@ -39,9 +44,9 @@ static const uint32_t	g_sha256_state[8] = {
 };
 
 t_compression_entry	g_compression_table[] = {
-	{"md5", {md5_compression_func, g_md5_state, sizeof(g_md5_state), 64}},
-	{"sha1", {sha1_compression_func, g_sha1_state, sizeof(g_sha1_state), 64}},
-	{"sha256", {sha256_compression_func, g_sha256_state, sizeof(g_sha256_state), 64}},
+	{"md5", {md5_compression_func, g_md5_state, sizeof(g_md5_state), sizeof(uint32_t), 64, false}},
+	{"sha1", {sha1_compression_func, g_sha1_state, sizeof(g_sha1_state), sizeof(uint32_t), 64, true}},
+	{"sha256", {sha256_compression_func, g_sha256_state, sizeof(g_sha256_state), sizeof(uint32_t), 64, true}},
 };
 
 t_message_digest_param	*dispatch_command(char *command)

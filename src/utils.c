@@ -6,7 +6,7 @@
 /*   By: charles <me@cacharle.xyz>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/01 15:00:16 by charles           #+#    #+#             */
-/*   Updated: 2020/08/01 19:24:41 by charles          ###   ########.fr       */
+/*   Updated: 2020/08/03 12:57:25 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,4 +40,32 @@ char		*bytes_to_str(uint8_t *bytes, size_t size)
 		i++;
 	}
 	return (ret);
+}
+
+uint32_t	reverse_bytes32(uint32_t x)
+{
+	return (
+		(x & 0x000000ffu) << 24 |
+		(x & 0x0000ff00u) << 8 |
+		(x & 0x00ff0000u) >> 8 |
+		(x & 0xff000000u) >> 24
+	);
+}
+
+/*
+** from: <byteswap.h>
+*/
+
+uint64_t	reverse_bytes64(uint64_t x)
+{
+	return (
+		(x & 0x00000000000000ffull) << 56 |
+		(x & 0x000000000000ff00ull) << 40 |
+		(x & 0x0000000000ff0000ull) << 24 |
+		(x & 0x00000000ff000000ull) << 8 |
+		(x & 0x000000ff00000000ull) >> 8 |
+		(x & 0x0000ff0000000000ull) >> 24 |
+		(x & 0x00ff000000000000ull) >> 40 |
+		(x & 0xff00000000000000ull) >> 56
+	);
 }

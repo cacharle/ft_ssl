@@ -6,7 +6,7 @@
 /*   By: charles <me@cacharle.xyz>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/01 15:03:39 by charles           #+#    #+#             */
-/*   Updated: 2020/08/02 13:56:26 by charles          ###   ########.fr       */
+/*   Updated: 2020/08/03 12:56:52 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,18 @@ char	*message_digest(t_message_digest_param *param, uint8_t *message_origin, uin
 	ft_memcpy(message, message_origin, size);
 	ft_memset(message + size, 0x0, padding_size);
 	message[size] |= 1 << 7;
-	*((uint64_t*)(message + size + padding_size - sizeof(uint64_t))) = size * 8;
+	*((uint64_t*)(message + size + padding_size - sizeof(uint64_t))) =
+		param->big_endian ? reverse_bytes64(size * 8) : (size * 8);
 	size += padding_size;
+
+	for (size_t j = 0; j < size; j++)
+	{
+		if (j % 8 == 0)
+			printf("\n");
+		printf("%02x ", message[j]);
+	}
+			printf("\n");
+
 	i = 0;
 	while (i < size)
 	{
@@ -47,6 +57,14 @@ char	*message_digest(t_message_digest_param *param, uint8_t *message_origin, uin
 		i += param->chunk_size;
 	}
 	free(message);
+	if (param->big_endian)
+	{
+		for (i = 0; i < param->compression_state_size / param->compression_state_stride; i++)
+			((uint32_t*)local_state)[i] =
+				param->compression_state_stride == sizeof(uint32_t)
+					? reverse_bytes32(((uint32_t*)local_state)[i])
+					: reverse_bytes64(((uint64_t*)local_state)[i]);
+	}
 	ret = bytes_to_str(local_state, param->compression_state_size);
 	free(local_state);
 	return (ret);

@@ -6,7 +6,7 @@
 /*   By: charles <me@cacharle.xyz>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/02 16:36:43 by charles           #+#    #+#             */
-/*   Updated: 2020/08/02 16:46:32 by charles          ###   ########.fr       */
+/*   Updated: 2020/08/03 13:00:09 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ void	*sha256_compression_func(void *v_state, uint8_t *chunk)
 
 	ft_memcpy(buf, chunk, 64);
 
+	/* for (i = 0; i < 16; i++) */
+	/* 	buf[i] = reverse_bytes32(((uint32_t*)chunk)[i]); */
 	for (i = 16; i < 64; i++)
 	{
 		s0 = rotate_right(buf[i - 15], 7) ^ rotate_right(buf[i - 15], 18) ^ rotate_right(buf[i - 15], 3);

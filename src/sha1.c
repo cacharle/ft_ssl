@@ -6,7 +6,7 @@
 /*   By: charles <me@cacharle.xyz>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/02 14:20:39 by charles           #+#    #+#             */
-/*   Updated: 2020/08/02 15:42:51 by charles          ###   ########.fr       */
+/*   Updated: 2020/08/03 12:10:55 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,7 @@ void	*sha1_compression_func(void *v_state, uint8_t *chunk)
 	uint32_t	*state;
 
 	for (i = 0; i < 16; i++)
-	{
-		buf[i] = chunk[i * 4] << 24;
-		buf[i] |= chunk[i * 4 + 1] << 16;
-		buf[i] |= chunk[i * 4 + 2] << 8;
-		buf[i] |= chunk[i * 4 + 3];
-	}
-	/* ft_memcpy(buf, chunk, 64); */
+		buf[i] = reverse_bytes32(((uint32_t*)chunk)[i]);
 	i = 16;
 	while (i < 80)
 	{
