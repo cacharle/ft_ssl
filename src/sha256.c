@@ -6,7 +6,7 @@
 /*   By: charles <me@cacharle.xyz>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/02 16:36:43 by charles           #+#    #+#             */
-/*   Updated: 2020/08/03 13:00:09 by charles          ###   ########.fr       */
+/*   Updated: 2020/08/03 13:46:07 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,12 @@ void	*sha256_compression_func(void *v_state, uint8_t *chunk)
 	uint32_t	a, b, c, d, e, f, g, h, s0, s1, ch, temp1, temp2, maj;
 	size_t		i;
 
-	ft_memcpy(buf, chunk, 64);
-
-	/* for (i = 0; i < 16; i++) */
-	/* 	buf[i] = reverse_bytes32(((uint32_t*)chunk)[i]); */
+	for (i = 0; i < 16; i++)
+		buf[i] = reverse_bytes32(((uint32_t*)chunk)[i]);
 	for (i = 16; i < 64; i++)
 	{
-		s0 = rotate_right(buf[i - 15], 7) ^ rotate_right(buf[i - 15], 18) ^ rotate_right(buf[i - 15], 3);
-		s1 = rotate_right(buf[i - 2], 17) ^ rotate_right(buf[i - 2], 19) ^ rotate_right(buf[i - 2], 10);
+		s0 = rotate_right(buf[i - 15], 7) ^ rotate_right(buf[i - 15], 18) ^ (buf[i - 15] >> 3);
+		s1 = rotate_right(buf[i - 2], 17) ^ rotate_right(buf[i - 2], 19) ^ (buf[i - 2] >> 10);
 		buf[i] = buf[i - 16] + s0 + buf[i - 7] + s1;
 	}
 
